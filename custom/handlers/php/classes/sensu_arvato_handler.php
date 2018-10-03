@@ -572,13 +572,14 @@ abstract class SensuArvatoHandler {
             if (isset($config['api']['host']) && isset($config['api']['port'])) {
               if (isset($config['api']['user']) && isset($config['api']['password'])) {
                 $this->_api_url = 'http://' . $config['api']['user'] .':'. $config['api']['password'] . '@' . $config['api']['host'] . ':' . $config['api']['port'];
+              }
               else
                 {
                   $this->_api_url = 'http://' . $config['api']['host'] . ':' . $config['api']['port'];
                 }
             }
-          }
         }
+
         $this->_silent = $silent;
     }
 
