@@ -2,7 +2,7 @@
 # Released under the same terms as Sensu (the MIT license)
 
 require 'sensu-handler'
-require 'aws-sdk'
+require 'aws-sdk-sns'
 require 'json'
 
 class SnsNotifier < Sensu::Handler

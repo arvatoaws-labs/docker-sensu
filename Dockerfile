@@ -24,7 +24,11 @@ RUN \
     apt-get install -y sensu=${SENSU_VERSION} &&\
     # Custom Plugins
     /opt/sensu/embedded/bin/gem install --no-ri --no-rdoc sensu-plugins-sensu && \
-    /opt/sensu/embedded/bin/gem install --no-ri --no-rdoc aws-sdk && \
+    /opt/sensu/embedded/bin/gem install --no-ri --no-rdoc aws-sdk-core && \
+    /opt/sensu/embedded/bin/gem install --no-ri --no-rdoc aws-sdk-sns && \
+    /opt/sensu/embedded/bin/gem install --no-ri --no-rdoc aws-sdk-sqs && \
+    /opt/sensu/embedded/bin/gem install --no-ri --no-rdoc aws-sdk-dynamodb && \
+    /opt/sensu/embedded/bin/gem install --no-ri --no-rdoc aws-sdk-ec2 && \
     # Install Sensu snssqs support
     /opt/sensu/embedded/bin/gem install --no-ri --no-rdoc --version ${SNSSQS_VERSION} sensu-transport-snssqs-ng && \
     # Overwrite with custom snssqs plugin

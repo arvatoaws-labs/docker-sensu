@@ -3,8 +3,9 @@
     "default": {
       "type": "set",
       "handlers": [
+        "ec2_node",
         "argos",
-        "ec2_node"
+        "sns"
       ]
     }
   }
