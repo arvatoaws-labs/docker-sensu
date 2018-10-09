@@ -3,7 +3,7 @@
     "state_change_only": {
       "negate": false,
       "attributes": {
-        "occurrences": "eval: value == 1 || ':::action:::' == 'resolve'"
+        "occurrences": "eval: value == :::check.occurrences|10::: || ':::action:::' == 'resolve'"
       }
     }
   }
