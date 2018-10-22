@@ -529,6 +529,11 @@ abstract class SensuArvatoHandler {
             }
         }
 
+        if ($event['check']['name'] == 'keepalive' && !isset($event['client']['ec2']['instance_id'])) {
+            $this->log("Event is uncritical due to client is not an ec2 instance", "debug");
+            return true;
+        }
+
         return false;
     }
 
