@@ -192,11 +192,11 @@ class Ec2Node < Sensu::Handler
   end
 
   def is_ec2_instance
-    @event['client']['name'].start_with?('i-')
+    instance_id.start_with?('i-')
   end
 
   def instance_id
-    @event['client']['name']
+    @event.dig('client', 'ec2', 'instance_id') || @event['client']['name']
   end
 
   def account_id

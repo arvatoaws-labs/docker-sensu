@@ -196,7 +196,7 @@ abstract class SensuArvatoHandler {
         $event = $this->getEvent();
 
         if (count($event['check']['history']) < $this->_min_history_count) {
-            $this->log("Event history contains  " . count($event['check']['history']) . " entires but limit is " . $this->_min_history_count, "debug");
+            $this->log("Event history contains " . count($event['check']['history']) . " entries but limit is " . $this->_min_history_count, "debug");
             return false;
         }
         return true;
