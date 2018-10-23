@@ -5,15 +5,16 @@
       "filters": [
         "keepalives",
         "ec2",
-        "every_5_occurrences",
-        "max_100_occurrences"
+        "ec2_instance",
+        "every_3_occurrences",
+        "max_25_occurrences"
       ],
       "severities": [
         "warning",
         "critical"
       ],
       "command": "/etc/sensu/handlers/ruby/ec2_node.rb",
-      "timeout": 300,
+      "timeout": 120,
       "handle_silenced" : true
     }
   }

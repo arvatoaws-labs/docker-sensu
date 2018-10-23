@@ -191,6 +191,10 @@ class Ec2Node < Sensu::Handler
     deletion_status(response)
   end
 
+  def is_ec2_instance
+    @event['client']['name'].start_with?( 'i-')
+  end
+
   def instance_id
     @event['client']['name']
   end
@@ -207,14 +211,18 @@ class Ec2Node < Sensu::Handler
     when '404'
       dyn = Aws::DynamoDB::Client.new({region: region_server})
       # TODO: getItem, query or index?
-      dyn_resp = dyn.scan({
-        filter_expression: 'account_id = :account',
-        expression_attribute_values: {
-          ':account' => account_id
+      dyn_resp = dyn.query({
+        key_condition_expression: "#ac = :ac",
+        expression_attribute_names: {
+          "#ac" => "account_id"
         },
+        expression_attribute_values: {
+          ":ac" => account_id
+        },
+        index_name: 'account_id-index',
         table_name: 'shared_monitoring_customer_accounts'
       })
-      if (dyn_resp.items.count()) then
+      if (dyn_resp.items.count() == 0) then
         raise("ERROR in dynamodb, no items found")
       end
       if (dyn_resp.items[0].key?('fixed_access_key_id') && dyn_resp.items[0].key?('fixed_secret_access_key')) then
@@ -279,20 +287,23 @@ class Ec2Node < Sensu::Handler
       return false
     end
 
+    unless is_ec2_instance
+      puts "[EC2 Node] #{instance_id} does not start with i-"
+      return false
+    end
+
     # Defining region for aws SDK object
     unless region_client == region_server
       puts "[EC2 Node] #{instance_id} is in region #{region_client} server is in region #{region_server}"
     end
 
     credentials = {}
-    unless account_id == Aws::STS::Client.new({region: region_server}).get_caller_identity.account
-      puts "[EC2 Node] #{instance_id} is in account #{account_id} server is in account #{Aws::STS::Client.new({region: region_server}).get_caller_identity.account}"
-      begin
-        credentials = assume_role
-        rescue Aws::DynamoDB::Errors::ResourceNotFoundException
-          puts "[EC2 Node] Role switch failed due to missing DynamoDB item"
-          return false
-      end
+    puts "[EC2 Node] #{instance_id} is in account #{account_id} server is in account #{Aws::STS::Client.new({region: region_server}).get_caller_identity.account}"
+    begin
+      credentials = assume_role
+      rescue StandardError => e
+        puts "[EC2 Node] Role switch failed due to #{e.message}"
+        return false
     end
 
     ec2 = Aws::EC2::Client.new({region: region_client, credentials: credentials})

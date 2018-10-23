@@ -1,0 +1,9 @@
+{
+  "filters": {
+    "max_25_occurrences": {
+      "attributes": {
+        "occurrences": "eval: value < 25"
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "filters": {
+    "chef": {
+      "attributes": {
+        "client": {
+          "name": "eval: value.start_with? \"i-\""
+        }
+      }
+    }
+  }
+}
