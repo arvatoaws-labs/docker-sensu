@@ -192,7 +192,7 @@ class Ec2Node < Sensu::Handler
   end
 
   def is_ec2_instance
-    @event['client']['name'].start_with?( 'i-')
+    @event['client']['name'].start_with?('i-')
   end
 
   def instance_id
@@ -204,77 +204,42 @@ class Ec2Node < Sensu::Handler
   end
 
   def assume_role
-    stash_req = api_request('GET', "/stash/aws/account/#{account_id}/service_role/assumed")
-    case stash_req.code
-    when '200'
-      return JSON.parse(stash_req.body)
-    when '404'
-      dyn = Aws::DynamoDB::Client.new({region: region_server})
-      # TODO: getItem, query or index?
-      dyn_resp = dyn.query({
-        key_condition_expression: "#ac = :ac",
-        expression_attribute_names: {
-          "#ac" => "account_id"
-        },
-        expression_attribute_values: {
-          ":ac" => account_id
-        },
-        index_name: 'account_id-index',
-        table_name: 'shared_monitoring_customer_accounts'
-      })
-      if (dyn_resp.items.count() == 0) then
-        raise("ERROR in dynamodb, no items found")
-      end
-      if (dyn_resp.items[0].key?('fixed_access_key_id') && dyn_resp.items[0].key?('fixed_secret_access_key')) then
-        assumed_role = {
-          access_key_id: dyn_resp.items[0]['fixed_access_key_id'],
-            secret_access_key: dyn_resp.items[0]['fixed_secret_access_key']
-        }
-        path = '/stashes'
-        api_request('POST', path) do |req|
-          domain = api_settings['host'].start_with?('http') ? api_settings['host'] : 'http://' + api_settings['host']
-          uri = URI("#{domain}:#{api_settings['port']}#{path}")
-          req.body = JSON.generate({
-            path: "/stash/aws/account/#{account_id}/service_role/assumed",
-            expire: 3000,
-            content: assumed_role
-          })
-          req.content_type = 'application/json'
-          Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
-            http.request(req)
-          end
-        end
-        return Aws::Credentials.new(assumed_role[:access_key_id], assumed_role[:secret_access_key])
-      else
-        role_arn = dyn_resp.items[0].key?('service_role_arn') ? dyn_resp.items[0]['service_role_arn'] : "arn:aws:iam::#{account_id}:role/AsyServiceRole"
-        sts = Aws::STS::Client.new({region: region_server})
-        sts_resp = sts.assume_role({
-          role_arn: role_arn,
-          role_session_name: "ec2-node-handler-#{account_id}"
-        })
-        assumed_role = {
-          access_key_id: sts_resp.credentials.access_key_id,
-          secret_access_key: sts_resp.credentials.secret_access_key,
-          session_token: sts_resp.credentials.session_token
-        }
-        path = '/stashes'
-        api_request('POST', path) do |req|
-          domain = api_settings['host'].start_with?('http') ? api_settings['host'] : 'http://' + api_settings['host']
-          uri = URI("#{domain}:#{api_settings['port']}#{path}")
-          req.body = JSON.generate({
-            path: "/stash/aws/account/#{account_id}/service_role/assumed",
-            expire: 3000,
-            content: assumed_role
-          })
-          req.content_type = 'application/json'
-          Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') do |http|
-            http.request(req)
-          end
-        end
-        return Aws::Credentials.new(assumed_role[:access_key_id], assumed_role[:secret_access_key], assumed_role[:session_token])
-      end
+    dyn = Aws::DynamoDB::Client.new({region: region_server})
+    dyn_resp = dyn.query({
+      key_condition_expression: "#ac = :ac",
+      expression_attribute_names: {
+        "#ac" => "account_id"
+      },
+      expression_attribute_values: {
+        ":ac" => account_id
+      },
+      index_name: 'account_id-index',
+      table_name: 'shared_monitoring_customer_accounts'
+    })
+    if (dyn_resp.items.count() == 0) then
+      raise("ERROR in dynamodb, no items found")
+    end
+    if (dyn_resp.items[0].key?('fixed_access_key_id') && dyn_resp.items[0].key?('fixed_secret_access_key')) then
+      assumed_role = {
+        access_key_id: dyn_resp.items[0]['fixed_access_key_id'],
+          secret_access_key: dyn_resp.items[0]['fixed_secret_access_key']
+      }
+      puts "[EC2 Node] using fixed access_key from dynamodb"
+      return Aws::Credentials.new(assumed_role[:access_key_id], assumed_role[:secret_access_key])
     else
-      raise("ERROR in sensu api /stashes access")
+      role_arn = dyn_resp.items[0].key?('service_role_arn') ? dyn_resp.items[0]['service_role_arn'] : "arn:aws:iam::#{account_id}:role/AsyServiceRole"
+      sts = Aws::STS::Client.new({region: region_server})
+      sts_resp = sts.assume_role({
+        role_arn: role_arn,
+        role_session_name: "ec2-node-handler-#{account_id}"
+      })
+      assumed_role = {
+        access_key_id: sts_resp.credentials.access_key_id,
+        secret_access_key: sts_resp.credentials.secret_access_key,
+        session_token: sts_resp.credentials.session_token
+      }
+      puts "[EC2 Node] switched role to #{role_arn}"
+      return Aws::Credentials.new(assumed_role[:access_key_id], assumed_role[:secret_access_key], assumed_role[:session_token])
     end
   end
 
@@ -316,6 +281,7 @@ class Ec2Node < Sensu::Handler
       instances = ec2.describe_instances({instance_ids: [instance_id]}).reservations[0]
       # If instance is empty/nil instance id is not valid so client can be deleted
       if instances.nil? || instances.empty?
+        puts "[EC2 Node] #{instance_id} not found"
         true
       else
         # Checking for instance state and reason, and if matches any of the user defined or default reasons then
@@ -325,6 +291,8 @@ class Ec2Node < Sensu::Handler
         instance_state_reason = instances.instances[0].state_reason.nil? ? nil : instances.instances[0].state_reason.code
         # Returns the instance state i.e: "terminated"
         instance_state = instances.instances[0].state.name
+
+        puts "[EC2 Node] #{instance_id} found in state #{instance_state}"
 
         # Return true is instance state and instance reason is valid
         instance_states.include?(instance_state) && instance_reasons.include?(instance_state_reason)
@@ -369,11 +337,11 @@ class Ec2Node < Sensu::Handler
   def deletion_status(code)
     case code
     when '202'
-      puts "[EC2 Node] 202: Successfully deleted Sensu client: #{@event['client']['name']}"
+      puts "[EC2 Node] 202: Successfully deleted sensu client #{@event['client']['name']}"
     when '404'
-      puts "[EC2 Node] 404: Unable to delete #{@event['client']['name']}, doesn't exist!"
+      puts "[EC2 Node] 404: Unable to delete sensu client #{@event['client']['name']}, because it doesn't exist!"
     when '500'
-      puts "[EC2 Node] 500: Miscellaneous error when deleting #{@event['client']['name']}"
+      puts "[EC2 Node] 500: Miscellaneous error when deleting sensu client #{@event['client']['name']}"
     else
       puts "[EC2 Node] #{code}: Completely unsure of what happened!"
     end
