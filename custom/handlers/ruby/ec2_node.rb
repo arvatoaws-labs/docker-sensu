@@ -214,6 +214,9 @@ class Ec2Node < Sensu::Handler
         },
         table_name: 'shared_monitoring_customer_accounts'
       })
+      if (dyn_resp.items.count()) then
+        raise("ERROR in dynamodb, no items found")
+      end
       if (dyn_resp.items[0].key?('fixed_access_key_id') && dyn_resp.items[0].key?('fixed_secret_access_key')) then
         assumed_role = {
           access_key_id: dyn_resp.items[0]['fixed_access_key_id'],
@@ -263,8 +266,7 @@ class Ec2Node < Sensu::Handler
         return Aws::Credentials.new(assumed_role[:access_key_id], assumed_role[:secret_access_key], assumed_role[:session_token])
       end
     else
-      puts "ERROR in sensu api /stashes access"
-      return {}
+      raise("ERROR in sensu api /stashes access")
     end
   end
 
