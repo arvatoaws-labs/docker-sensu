@@ -5,7 +5,7 @@
         "ec2": {
             "instance_id": "eval: value.nil?"
         }
-      }
+      },
       "negate": true
     }
   }

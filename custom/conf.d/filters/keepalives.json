@@ -3,8 +3,7 @@
     "keepalives": {
       "attributes": {
         "check": {
-          "name": "keepalive",
-          "status": 2
+          "name": "keepalive"
         },
         "occurrences": "eval: value > 2"
       }
