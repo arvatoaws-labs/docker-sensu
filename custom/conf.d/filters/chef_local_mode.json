@@ -1,6 +1,6 @@
 {
   "filters": {
-    "chef_server_mode": {
+    "chef_local_mode": {
       "attributes": {
         "client": {
           "chef": {
