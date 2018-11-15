@@ -263,6 +263,11 @@ class SensuArvatoArgosHandler extends SensuArvatoHandler {
             return 1;
         }
 
+        if (!$this->_hasMinimumOccurrences()) {
+            $this->log("Abort event occurrences is too low");
+            return 1;
+        }
+
         if ($this->_inMaintenance()) {
             $this->log("Abort maintenance found");
             return 1;

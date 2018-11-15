@@ -6,7 +6,6 @@
         "keepalives",
         "ec2",
         "ec2_instance",
-        "every_3_occurrences",
         "max_25_occurrences"
       ],
       "severities": [

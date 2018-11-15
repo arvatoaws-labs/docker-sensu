@@ -202,6 +202,21 @@ abstract class SensuArvatoHandler {
         return true;
     }
 
+    protected function _hasMinimumOccurrences() {
+        $event = $this->getEvent();
+
+        $min = 10;
+        if (isset($event['check']['occurrences'])) {
+            $min = $event['check']['occurrences'];
+        }
+
+        if (isset($event['occurrences']) && $event['occurrences'] < $min) {
+            return false;
+        }
+
+        return true;
+    }
+
     protected function _hasDependentEvent() {
         $event = $this->getEvent();
 

@@ -1,11 +1,12 @@
 {
   "filters": {
-    "chef": {
+    "ec2_instance": {
       "attributes": {
-        "client": {
-          "name": "eval: value.start_with? \"i-\""
+        "ec2": {
+            "instance_id": "eval: value.nil?"
         }
-      }
+      },
+      "negate": true
     }
   }
 }
