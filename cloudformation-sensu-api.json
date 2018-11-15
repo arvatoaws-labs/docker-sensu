@@ -609,7 +609,7 @@
                 "awslogs-region": {
                   "Ref": "AWS::Region"
                 },
-                "awslogs-group": "ECS-Docker",
+                "awslogs-group": "/asy/default/sensu-api",
                 "awslogs-stream-prefix": {
                   "Ref": "ContainerHost"
                 }
