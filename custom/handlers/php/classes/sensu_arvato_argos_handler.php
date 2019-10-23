@@ -91,17 +91,18 @@ class SensuArvatoArgosHandler extends SensuArvatoHandler {
             case 0:
                 return 'HARMLESS';
                 break;
-            case 1:
-                if ($this->_isCritical())
-                    return 'MINOR';
-                return 'WARNING';
-                break;
+            // case 1:
+            //     if ($this->_isCritical())
+            //         return 'MINOR';
+            //     return 'WARNING';
+            //     break;
             case 2:
                 if ($this->_isCritical())
                     return 'CRITICAL';
-                if ($this->_isUnCritical())
-                    return 'WARNING';
-                return 'MINOR';
+                // if ($this->_isUnCritical())
+                //     return 'WARNING';
+                // return 'MINOR';
+                return 'HARMLESS';
                 break;
             case 3:
                 return 'UNKNOWN';
