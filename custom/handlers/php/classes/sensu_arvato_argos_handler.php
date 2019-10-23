@@ -89,6 +89,7 @@ class SensuArvatoArgosHandler extends SensuArvatoHandler {
 
         switch ($event['check']['status']) {
             case 0:
+            case 1:
                 return 'HARMLESS';
                 break;
             // case 1:
