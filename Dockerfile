@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 MAINTAINER Shane Starcher <shanestarcher@gmail.com>
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG SENSU_VERSION=1.5.0-1
+ARG SENSU_VERSION=1.8.0-1
 ARG SNSSQS_VERSION=2.3.0
 ARG DUMB_INIT_VERSION=1.2.2
 ARG ENVTPL_VERSION=0.2.3
@@ -19,7 +19,7 @@ RUN \
     find /usr/share/i18n/charmaps ! -name UTF-8.gz -type f -exec rm -v {} + &&\
     # Install Sensu
     curl -s https://sensu.global.ssl.fastly.net/apt/pubkey.gpg | apt-key add - &&\
-    echo "deb https://sensu.global.ssl.fastly.net/apt stretch main" > /etc/apt/sources.list.d/sensu.list &&\
+    echo "deb https://sensu.global.ssl.fastly.net/apt bionic main" > /etc/apt/sources.list.d/sensu.list &&\
     apt-get update &&\
     apt-get install -y sensu=${SENSU_VERSION} &&\
     # Custom Plugins
