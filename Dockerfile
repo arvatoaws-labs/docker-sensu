@@ -98,6 +98,7 @@ ENV DEFAULT_PLUGINS_REPO=sensu-plugins \
     ARGOS_URL='' \
     ARGOS_API_KEY='' \
     ARGOS_OP_TOOL_KIT=false \
+    ARGOS_REPORT_ONLY_HIGH_TICKETS=false \
     GRAPHITE_HOST='' \
     GRAPHITE_PORT=2003 \
     # Common Config
