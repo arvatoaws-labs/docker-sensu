@@ -5,6 +5,7 @@
     "simulate": {{ default true .ARGOS_SIMULATE }},
     "url": {{ .ARGOS_URL | quote }},
     "api_key": {{ .ARGOS_API_KEY | quote }},
-    "op_tool_kit": {{ default false .ARGOS_OP_TOOL_KIT }}
+    "op_tool_kit": {{ default false .ARGOS_OP_TOOL_KIT }},
+    "report_only_high_tickets": {{ default false .ARGOS_REPORT_ONLY_HIGH_TICKETS }}
   }
 }

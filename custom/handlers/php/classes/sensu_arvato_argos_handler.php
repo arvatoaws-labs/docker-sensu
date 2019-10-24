@@ -6,7 +6,7 @@ require_once(__DIR__ . '/sensu_arvato_handler.php');
 
 class SensuArvatoArgosHandler extends SensuArvatoHandler {
 
-    protected $_needed_config_fields = array('live', 'debug', 'simulate', 'api_key', 'url', 'op_tool_kit');
+    protected $_needed_config_fields = array('live', 'debug', 'simulate', 'api_key', 'url', 'op_tool_kit', 'report_only_high_tickets');
     private $_severity_mapping = array(0 => 'WARNING', 1 => 'MINOR', 2 => 'CRITICAL');
 
     public function getHandlerName() {
@@ -93,7 +93,7 @@ class SensuArvatoArgosHandler extends SensuArvatoHandler {
                 break;
             case 1:
                 if ($this->_isCritical())
-                    return 'MINOR';
+                    return $config['report_only_high_tickets'] ? 'WARNING' : 'MINOR';
                 return 'WARNING';
                 break;
             case 2:
@@ -101,7 +101,7 @@ class SensuArvatoArgosHandler extends SensuArvatoHandler {
                     return 'CRITICAL';
                 if ($this->_isUnCritical())
                     return 'WARNING';
-                return 'MINOR';
+                return $config['report_only_high_tickets'] ? 'WARNING' : 'MINOR';
                 break;
             case 3:
                 return 'UNKNOWN';
