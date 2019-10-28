@@ -79,6 +79,7 @@ class SensuArvatoArgosHandler extends SensuArvatoHandler {
 
     public function getEventSeverity() {
         ## WARNING=KeinTicket, MINOR=MediumTicket, CRITICAL=HighTicket
+        $config = $this->getHandlerConfig();
         $event = $this->getEvent();
 
         if ($event['action'] == 'resolve')
