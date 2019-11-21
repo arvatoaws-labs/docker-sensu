@@ -415,17 +415,19 @@ abstract class SensuArvatoHandler {
     }
 
     public function getTodoText() {
-        $event = $this->getEvent();
+        // $event = $this->getEvent();
 
-        if (isset($event['client']['todo'])) {
-            return $event['client']['todo'];
-        }
+        // if (isset($event['client']['todo'])) {
+        //     return $event['client']['todo'];
+        // }
 
-        if (isset($event['check']['todo'])) {
-            return $event['check']['todo'];
-        }
+        // if (isset($event['check']['todo'])) {
+        //     return $event['check']['todo'];
+        // }
 
-        return 'Todo not defined on sensu check or client level';
+        // return 'Todo not defined on sensu check or client level';
+
+        return 'Always contact (in case of high ticket) or assign to the team/assignment group "AWS Operations Team (Arvato Systems)" directly and immediately. Do not edit this ticket yourself. Do not consider repeat counts or other preconditions. This ticket is not supposed to be filtered or solved by SysOp.';
     }
 
     public function getAutoscalingGroupName() {
