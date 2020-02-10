@@ -4,7 +4,6 @@
       "type": "pipe",
       "filters": [
         "keepalives",
-        "ec2",
         "ec2_instance",
         "max_25_occurrences"
       ],
