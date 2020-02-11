@@ -1,7 +1,7 @@
 {
     "transport": {
       "name": "{{ .TRANSPORT_NAME  }}",
-      "reconnect_on_error": {{ default .TRANSPORT_RECONNECT "true" }}
+      "reconnect_on_error": {{ default "true" .TRANSPORT_RECONNECT }}
     } {{ if eq .TRANSPORT_NAME "rabbitmq"}},
     "rabbitmq": {
         "port": {{ default .RABBITMQ_PORT .RABBITMQ_PORT_5672_TCP_PORT }},
@@ -17,8 +17,8 @@
     } {{ end }}
     {{ if eq .TRANSPORT_NAME "snssqs"}},
     "snssqs": {
-        "max_number_of_messages": {{ default .SNSSQS_MAX_NUMBER_OF_MESSAGES 10}},
-        "wait_time_seconds": {{ default .SNSSQS_WAIT_TIME_SECONDS 2 }},
+        "max_number_of_messages": {{ default 10 .SNSSQS_MAX_NUMBER_OF_MESSAGES }},
+        "wait_time_seconds": {{ default 2 .SNSSQS_WAIT_TIME_SECONDS }},
         "region": {{ .SNSSQS_REGION | quote }},
         "consuming_sqs_queue_url": {{ .SNSSQS_CONSUMING_SQS_QUEUE_URL | quote }},
         "publishing_sns_topic_arn": {{ .SNSSQS_PUBLISHING_SNS_TOPIC_ARN | quote }}

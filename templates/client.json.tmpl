@@ -15,8 +15,8 @@
     {{end}}
     "keepalive": {
       "thresholds": {
-         "warning": {{ default .CLIENT_KEEPALIVE_WARNING 120 }},
-         "critical": {{ default .CLIENT_KEEPALIVE_CRITICAL 180 }}
+         "warning": {{ default 120 .CLIENT_KEEPALIVE_WARNING }},
+         "critical": {{ default 180 .CLIENT_KEEPALIVE_CRITICAL }}
       },
       "handler": {{ default "default" .CLIENT_KEEPALIVE_HANDLER | quote }}
     }
