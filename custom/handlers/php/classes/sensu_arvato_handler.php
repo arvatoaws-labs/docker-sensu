@@ -445,7 +445,7 @@ abstract class SensuArvatoHandler
 
     // return 'Todo not defined on sensu check or client level';
 
-    return 'Always contact (in case of high ticket) or assign to the team/assignment group "AWS Operations Team (Arvato Systems)" directly and immediately. Do not edit this ticket yourself. Do not consider repeat counts or other preconditions. This ticket is not supposed to be filtered or solved by SysOp.';
+    return 'Always contact the component responsible assignment group directly. Do not edit this ticket yourself. Do not consider repeat counts or other preconditions. This ticket is not supposed to be filtered or solved by SysOp. If the assingment group isn\'t documented correctly, contact AWS Operations.';
   }
 
   public function getAutoscalingGroupName()
