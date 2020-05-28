@@ -32,7 +32,7 @@ RUN \
     # Install Sensu snssqs support
     /opt/sensu/embedded/bin/gem install --no-ri --no-rdoc --version ${SNSSQS_VERSION} sensu-transport-snssqs-ng && \
     # Overwrite with custom snssqs plugin
-    curl -Ls https://raw.githubusercontent.com/arvatoaws/sensu-transport-snssqs-ng/master/lib/sensu/transport/snssqs.rb > /opt/sensu/embedded/lib/ruby/gems/2.4.0/gems/sensu-transport-snssqs-ng-${SNSSQS_VERSION}/lib/sensu/transport/snssqs.rb  && \
+    curl -Ls https://raw.githubusercontent.com/arvatoaws-labs/sensu-transport-snssqs-ng/master/lib/sensu/transport/snssqs.rb > /opt/sensu/embedded/lib/ruby/gems/2.4.0/gems/sensu-transport-snssqs-ng-${SNSSQS_VERSION}/lib/sensu/transport/snssqs.rb  && \
     # Cleanup sensu
     rm -rf /opt/sensu/embedded/lib/ruby/gems/2.4.0/cache/* &&\
     rm -rf /opt/sensu/embedded/lib/ruby/gems/2.4.0/doc/* &&\
