@@ -58,8 +58,11 @@ class SensuArvatoArgosHandler extends SensuArvatoHandler
     ## Cloudformation Stack Name wie DEV-SENSU or at least AWS Account ID
     $event = $this->getEvent();
     $stackname = 'UNKNOWN';
-    if (isset($event['client']['ec2']['account_id']) {
+    if (isset($event['client']['ec2']['account_id'])) {
       $stackname = 'aws' . $event['client']['ec2']['account_id'];
+    }
+    if (isset($event['client']['account_id'])) {
+      $stackname = 'aws' . $event['client']['account_id'];
     } 
     if (isset($event['client']['name']) && strpos($event['client']['name'], '.aws') !== false) {
       $stackname = 'aws' . explode('.', $event['client']['name'])[3];
