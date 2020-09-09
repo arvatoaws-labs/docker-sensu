@@ -55,9 +55,15 @@ class SensuArvatoArgosHandler extends SensuArvatoHandler
 
   public function getOriginName()
   {
-    ## Cloudformation Stack Name wie DEV-SENSU
+    ## Cloudformation Stack Name wie DEV-SENSU or at least AWS Account ID
     $event = $this->getEvent();
     $stackname = 'UNKNOWN';
+    if (isset($event['client']['ec2']['account_id']) {
+      $stackname = 'aws' . $event['client']['ec2']['account_id'];
+    } 
+    if (isset($event['client']['name']) && strpos($event['client']['name'], '.aws') !== false) {
+      $stackname = 'aws' . explode('.', $event['client']['name'])[3];
+    }
     if (isset($event['client']['_target'])) {
       $stackname = $event['client']['_target']; # Route53 health check URL to be checked
     }
@@ -157,13 +163,13 @@ class SensuArvatoArgosHandler extends SensuArvatoHandler
           }
 
          */
-    $argosEvent = array(
+    $argosEvent = array( 
       'containerName' => $this->getContainerName(),
       'originName' => $this->getOriginName(),
-      'eventName' => $this->getEventName(),
+      'eventName' => $this->getEventName(), 
       'eventType' => $this->getEventType(),
       'eventSeverity' => $this->getEventSeverity(),
-      'objectName' => $this->getObjectName(),
+      'objectName' => $this->getObjectName(), 
       'eventUtime' => $this->getEventUtime(),
       'dsValues' => array()
     );
