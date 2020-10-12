@@ -166,12 +166,18 @@ class SensuArvatoArgosHandler extends SensuArvatoHandler
           }
 
          */
+
+    $severity = $this->getEventSeverity();
+    if ($config['report_only_high_tickets'] && $severity == 'WARNING') {
+      return true;
+    }
+
     $argosEvent = array( 
       'containerName' => $this->getContainerName(),
       'originName' => $this->getOriginName(),
       'eventName' => $this->getEventName(), 
       'eventType' => $this->getEventType(),
-      'eventSeverity' => $this->getEventSeverity(),
+      'eventSeverity' => $severity,
       'objectName' => $this->getObjectName(), 
       'eventUtime' => $this->getEventUtime(),
       'dsValues' => array()
