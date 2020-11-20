@@ -38,7 +38,7 @@ RUN \
     rm -rf /opt/sensu/embedded/lib/ruby/gems/2.4.0/doc/* &&\
     find /opt/sensu/embedded/lib/ruby/gems/ -name "*.o" -delete &&\
     # Install php
-    apt-get install -y php-cli php-curl vim &&\
+    apt-get install -y php-cli php-curl php-mbstring vim &&\
     # Cleanup debian
     apt-get remove -y gnupg build-essential &&\
     apt-get autoremove -y &&\
