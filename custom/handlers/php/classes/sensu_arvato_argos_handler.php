@@ -277,7 +277,7 @@ class SensuArvatoArgosHandler extends SensuArvatoHandler
       }
     } catch (Exception $e) {
       $this->log("Exception in productive check: " . $e->getMessage(), 'error');
-      return false;
+      return true;
     }
   }
 
