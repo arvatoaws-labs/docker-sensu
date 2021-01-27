@@ -1,5 +1,5 @@
-FROM ubuntu:18.04
-MAINTAINER Shane Starcher <shanestarcher@gmail.com>
+FROM public.ecr.aws/ubuntu/ubuntu:18.04
+LABEL maintainer="Shane Starcher <shanestarcher@gmail.com>"
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG SENSU_VERSION=1.8.0-1
